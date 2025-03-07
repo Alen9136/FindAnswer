@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FindAnswer</string>
+    <string name="already_have_an_account_log_in">Already have an account? Log In</string>
 </resources>
