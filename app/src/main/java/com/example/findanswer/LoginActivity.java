@@ -1,4 +1,4 @@
-package com.example.findanswer;  // замените на ваш пакет
+package com.example.findanswer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,14 +30,14 @@ public class LoginActivity extends AppCompatActivity {
                 String password = passwordEditText.getText().toString();
 
                 if (!email.isEmpty() && !password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Вход выполнен!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Login completed!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
 
                 } else {
-                    Toast.makeText(LoginActivity.this, "Заполните все поля", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "fill in all fields", Toast.LENGTH_SHORT).show();
                 }
             }
         });

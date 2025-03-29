@@ -17,19 +17,16 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Текстовый элемент для отображения текста
-        TextView centerText = findViewById(R.id.center_text); // Инициализируем TextView
+        TextView centerText = findViewById(R.id.center_text); //
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // Загружаем главный фрагмент при запуске
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new HomeFragment())
                     .commit();
-            centerText.setText("Home Fragment"); // Устанавливаем начальный текст
+            centerText.setText("Home Fragment");
         }
 
-        // Обработка нажатий на элементы нижнего меню
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
