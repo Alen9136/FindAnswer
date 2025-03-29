@@ -14,13 +14,17 @@
         android:padding="10dp">
 
         <!-- Картинка (можно заменить на логотип) -->
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="150dp"
-            android:src="@drawable/fasw"
-            android:layout_marginBottom="20dp"/>
 
         <!-- Заголовок -->
+
+        <ImageView
+            android:layout_width="543dp"
+            android:layout_height="258dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/fasw" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,7 +85,7 @@
             android:id="@+id/btnSignUp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Sign up"
+            android:text="@string/sign_up"
             android:backgroundTint="@color/green"
             android:textColor="@color/white"
             android:textSize="16sp"
@@ -94,7 +98,10 @@
             android:text="@string/already_have_an_account_log_in"
             android:textSize="14sp"
             android:textColor="@color/gray"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:id="@+id/btnLogin"
+            />
+
 
     </LinearLayout>
 </ScrollView>
