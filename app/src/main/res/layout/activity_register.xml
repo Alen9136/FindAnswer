@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="10dp">
+
+        <!-- Картинка (можно заменить на логотип) -->
+
+        <!-- Заголовок -->
+
+        <ImageView
+            android:layout_width="543dp"
+            android:layout_height="258dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/fasw" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/green"
+            android:layout_marginBottom="10dp"/>
+
+        <!-- Описание -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign up and get free 80 coins"
+            android:textSize="16sp"
+            android:textColor="@color/gray"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Поле Name -->
+        <EditText
+            android:id="@+id/inputName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Your Name"
+            android:background="@drawable/edit_text_border"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"/>
+
+        <!-- Поле Email -->
+        <EditText
+            android:id="@+id/inputEmail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Your Email"
+            android:background="@drawable/edit_text_border"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"/>
+
+        <!-- Поле Password -->
+        <EditText
+            android:id="@+id/inputPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Choose password"
+            android:background="@drawable/edit_text_border"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:inputType="textPassword"
+            android:layout_marginBottom="20dp"/>
+        <EditText
+            android:id="@+id/checkPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Repeat password"
+            android:background="@drawable/edit_text_border"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:inputType="textPassword"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Кнопка Sign Up -->
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/sign_up"
+            android:backgroundTint="@color/green"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginBottom="15dp"/>
+
+        <!-- Ссылка Log In -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/already_have_an_account_log_in"
+            android:textSize="14sp"
+            android:textColor="@color/gray"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/btnLogin"
+            />
+
+
+    </LinearLayout>
+</ScrollView>

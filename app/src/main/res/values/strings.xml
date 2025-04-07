@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">FindAnswer</string>
+    <string name="already_have_an_account_log_in">Already have an account? Log In</string>
+    <string name="sign_up">Sign up</string>
+    <string name="home_fragment">Home Fragment</string>
+    <string name="create_fragment">Create Fragment</string>
+    <string name="discover_fragment">Discover Fragment</string>
+    <string name="profile_fragment">Profile Fragment</string>
+    <string name="hint_title">Заголовок</string>
+    <string name="hint_description">Описание</string>
+    <string name="attach_file">Прикрепить файл</string>
+    <string name="hint_coins">Количество монет</string>
+    <string name="create_question">Создать</string>
+
+</resources>

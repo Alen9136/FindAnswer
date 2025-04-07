@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "317347949364",
+    "project_id": "findanswer-40f2c",
+    "storage_bucket": "findanswer-40f2c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317347949364:android:2196f62130637315609361",
+        "android_client_info": {
+          "package_name": "com.example.findanswer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtUyED9TKfPhje3VSbtujjnBicht3vy-0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
