@@ -11,5 +11,6 @@
     <string name="attach_file">Прикрепить файл</string>
     <string name="hint_coins">Количество монет</string>
     <string name="create_question">Создать</string>
+    <string name="todo">TODO</string>
 
 </resources>

@@ -26,6 +26,11 @@
             tools:ignore="Instantiatable,WrongManifestParent" />
         <activity android:name=".HomeActivity"
             tools:ignore="Instantiatable,WrongManifestParent" />
+        <activity android:name=".QuestionAnswerActivity" />
+        <activity android:name="HomeFragment"
+            tools:ignore="Instantiatable" />
+        <activity android:name="CreateFragment"
+            tools:ignore="Instantiatable" />
     </application>
 
 </manifest>

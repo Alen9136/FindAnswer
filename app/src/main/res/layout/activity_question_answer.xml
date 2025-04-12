@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F1FAF4"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Заголовок -->
+
+        <ImageView
+            android:id="@+id/nav_return"
+            android:layout_width="25dp"
+            android:layout_height="22dp"
+            android:layout_gravity="start"
+            android:layout_marginTop="35dp"
+            android:layout_marginBottom="-50dp"
+            android:contentDescription="@string/todo"
+            android:src="@drawable/nav_return"
+            android:scaleType="centerInside" />
+
+
+        <TextView
+            android:id="@+id/qa_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="12dp"
+            android:text="Question: "
+            android:textColor="#2F855A"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            />
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#0DBB0D"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="20dp"
+            />
+
+
+
+
+        <TextView
+            android:id="@+id/qa_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Question description"
+            android:textSize="16sp"
+            android:textColor="#2D3748"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Дедлайн -->
+        <TextView
+            android:id="@+id/qa_deadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deadline: --/--/----"
+            android:textColor="#718096"
+            android:textSize="14sp"
+            android:layout_marginBottom="30dp" />
+
+        <!-- Поле ответа -->
+        <EditText
+            android:id="@+id/qa_fullAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@drawable/edit_text_border"
+            android:padding="10dp"
+            android:gravity="start"
+            android:text="Answer:\n\:"
+            android:textSize="15sp"
+            android:textColor="#1A202C"
+            android:layout_marginBottom="24dp"
+            />
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Answer"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:backgroundTint="#48BB78"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="30dp" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+    </LinearLayout>
+</ScrollView>
