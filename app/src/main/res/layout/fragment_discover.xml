@@ -1,14 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/discoverFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green">
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/discover_fragment"
-        android:textSize="24sp"
-        android:textColor="@android:color/black"
-        android:layout_centerInParent="true"/>
-</RelativeLayout>
+    <!-- Spacer to push search bar a bit down -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="42dp" />
+
+    <!-- Search Field with search button -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:cardElevation="2dp"
+        app:cardCornerRadius="25dp"
+        app:cardBackgroundColor="#E8F5E9">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="#388E3C" />
+
+            <EditText
+                android:id="@+id/searchEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Search for questions..."
+                android:textColor="#2E7D32"
+                android:textColorHint="#66BB6A"
+                android:background="@android:color/transparent"
+                android:paddingStart="10dp"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/searchButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Search"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="#388E3C" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Divider line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="#DDDDDD" />
+
+    <!-- RecyclerView for showing discovered questions -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/discoverRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:clipToPadding="false" />
+
+</LinearLayout>
