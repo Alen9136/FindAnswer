@@ -13,10 +13,10 @@ import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.QuestionViewHolder> {
 
-    private final List<Question> questions;
+    private static List<Question> questions;
 
     public QuestionAdapter(List<Question> questions) {
-        this.questions = questions;
+        QuestionAdapter.questions = questions;
     }
 
     @NonNull
@@ -51,7 +51,10 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         return questions.size();
     }
 
-    public static class QuestionViewHolder extends RecyclerView.ViewHolder {
+    public void updateList(List<Question> filteredList) {
+    }
+
+    public class QuestionViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView, descriptionTextView, subjecTextView;
 
         public QuestionViewHolder(@NonNull View itemView) {
@@ -60,5 +63,12 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
             subjecTextView = itemView.findViewById(R.id.subjectTextView);
         }
+        @SuppressLint("NotifyDataSetChanged")
+        public void updateList(List<Question> newList) {
+            questions.clear();
+            questions.addAll(newList);
+            notifyDataSetChanged();
+        }
+
     }
 }
