@@ -42,6 +42,8 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             intent.putExtra("subject", q.subject);
             intent.putExtra("grade", q.grade);
             intent.putExtra("grade", q.coins);
+            intent.putExtra("fileUrl", Question.getFileUrl());
+
             v.getContext().startActivity(intent);
         });
     }

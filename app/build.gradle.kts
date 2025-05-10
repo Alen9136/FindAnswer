@@ -33,6 +33,10 @@ android {
 }
 
 dependencies {
+    annotationProcessor(libs.compiler)
+    implementation(libs.glide)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.auth.v2231)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.appcompat)
