@@ -1,14 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green">
-
-    <TextView
-        android:layout_width="wrap_content"
+    android:paddingTop="60dp"
+    android:background="#FFFFFF
+">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Profile Fragment"
-        android:textSize="24sp"
-        android:textColor="@android:color/black"
-        android:layout_centerInParent="true"/>
-</RelativeLayout>
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="24dp">
+
+        <!-- Аватарка -->
+        <ImageView
+            android:id="@+id/profileAvatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/nav_profile"
+            android:background="@drawable/avatar_circle_bg"
+            android:scaleType="centerCrop"
+            android:clipToOutline="true"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Ник -->
+        <TextView
+            android:id="@+id/profileUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textSize="20sp"
+            android:textColor="#2E7D32"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Статистика -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="3"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/answersCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#388E3C" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Answers"
+                    android:textSize="13sp"
+                    android:textColor="#666" />
+            </LinearLayout>
+
+            <!-- Разделитель -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="40dp"
+                android:background="#DDDDDD" />
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/bestAnswersCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#388E3C" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Best"
+                    android:textSize="13sp"
+                    android:textColor="#666" />
+            </LinearLayout>
+
+            <!-- Разделитель -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="40dp"
+                android:background="#DDDDDD" />
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/likesCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#388E3C" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Likes"
+                    android:textSize="13sp"
+                    android:textColor="#666" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Кнопка My Questions -->
+
+        <!-- Кнопка редактировать -->
+        <Button
+            android:id="@+id/editProfileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#A5D6A7"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="10dp"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:elevation="4dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp" />
+        <Button
+            android:id="@+id/myQuestionsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Questions"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#81C784"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="10dp"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:elevation="4dp"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+</ScrollView>

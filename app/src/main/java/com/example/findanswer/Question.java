@@ -8,13 +8,16 @@ public class Question {
     public String deadline;
     public int coins;
     public String creationDate;
-    public static String fileUrl;
+    public String fileUrl;
+    public String id;
+    public String name; // ✅ оставляем только это поле
 
     // Пустой конструктор для Firebase
     public Question() {}
 
     // Основной конструктор
-    public Question(String grade, String subject, String title, String description, String deadline, int coins, String creationDate) {
+    public Question(String grade, String subject, String title, String description,
+                    String deadline, int coins, String creationDate, String name) {
         this.grade = grade;
         this.subject = subject;
         this.title = title;
@@ -22,13 +25,31 @@ public class Question {
         this.deadline = deadline;
         this.coins = coins;
         this.creationDate = creationDate;
+        this.name = name;
     }
 
-    // Сеттер для fileUrl
-    public void setFileUrl(String fileUrl) {
-        Question.fileUrl = fileUrl;
+    // Сеттеры и геттеры
+    public String getName() {
+        return name;
     }
-    public static String getFileUrl() {
+
+    public void setName(String username) {
+        this.name = username;
+    }
+
+    public String getFileUrl() {
         return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

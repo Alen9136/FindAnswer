@@ -19,8 +19,10 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.*;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -127,7 +129,6 @@ public class CreateFragment extends Fragment {
             String deadline = deadlineEditText.getText().toString().trim();
             long creationDate = System.currentTimeMillis();
             String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date(creationDate));
-
             boolean valid = true;
 
             if (deadline.isEmpty()) {
@@ -153,14 +154,44 @@ public class CreateFragment extends Fragment {
                 valid = false;
             }
 
-            if (valid) {
-                int coins = Integer.parseInt(coinsStr);
-                Question question = new Question(grade, subject, title, description, deadline, coins, formattedDate);
-                question.setFileUrl(uploadedFileUrl);
-                questionsRef.push().setValue(question)
-                        .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Question uploaded!", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            if (!valid) return;
+
+            int coins = Integer.parseInt(coinsStr);
+
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser == null) {
+                Toast.makeText(getContext(), "User not authenticated", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            String userId = currentUser.getUid();
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String name = snapshot.child("name").getValue(String.class);
+                    if (name == null || name.isEmpty()) {
+                        Toast.makeText(getContext(), "Пожалуйста, укажите имя в профиле", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    String questionId = questionsRef.push().getKey(); // получаем ключ
+                    if(questionId != null){
+                        Question question = new Question(grade, subject, title, description, deadline, coins, formattedDate, name);
+                        question.setFileUrl(uploadedFileUrl);
+                        question.setId(questionId);
+                        questionsRef.push().setValue(question)
+                                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Question uploaded!", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getContext(), "Failed to load username", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 

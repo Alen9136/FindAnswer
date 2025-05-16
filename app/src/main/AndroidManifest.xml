@@ -41,5 +41,9 @@
             tools:ignore="Instantiatable" />
         <activity android:name="CreateFragment"
             tools:ignore="Instantiatable" />
+        <activity android:name=".QuestionDetailActivity" />
+        <activity android:name=".EditProfileActivity" />
+
+
     </application>
 </manifest>
