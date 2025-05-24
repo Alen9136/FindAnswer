@@ -19,17 +19,17 @@
             android:id="@+id/usernameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Author"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:clickable="true"
+            android:focusable="true" />
 
         <!-- Предмет и класс -->
         <TextView
             android:id="@+id/subjectTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Algebra • 10 grade"
             android:textSize="14sp"
             android:textColor="#777777"
             android:layout_marginBottom="4dp" />
@@ -39,19 +39,28 @@
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Title of the question"
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColor="#000000"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="4dp" />
 
+        <!-- Дедлайн -->
+        <TextView
+            android:id="@+id/deadlineTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF5722"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp" />
+
         <!-- Описание вопроса -->
         <TextView
             android:id="@+id/descriptionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description..."
             android:textSize="18sp"
             android:textColor="#333333"
             android:layout_marginTop="4dp"
@@ -62,7 +71,6 @@
             android:id="@+id/answerButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+ ANSWER THE QUESTION + 5 C"
             android:backgroundTint="#A5D6A7"
             android:textSize="14sp"
             android:padding="10dp"
@@ -80,19 +88,64 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Поле "Спросить автора" -->
-        <EditText
-            android:id="@+id/askAuthorEditText"
+        <!-- Блок "Спросить автора" -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ask the author about this question..."
-            android:padding="8dp"
-            android:background="@drawable/edittext_background"
-            android:textColor="#000000"
-            android:textColorHint="#999999"
-            android:layout_marginBottom="24dp" />
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
 
-        <!-- Заголовок блока ответов -->
+            <EditText
+                android:id="@+id/askAuthorEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Ask the author about this question..."
+                android:padding="8dp"
+                android:background="@drawable/edittext_background"
+                android:textColor="#000000"
+                android:textColorHint="#999999" />
+
+            <Button
+                android:id="@+id/sendClarificationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Send"
+                android:textSize="14sp"
+                android:backgroundTint="#A5D6A7"
+                android:layout_marginStart="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_gravity="start"
+                android:textColor="#FFFFFF"
+                android:elevation="4dp"
+                android:layout_marginBottom="-16dp" />
+        </LinearLayout>
+
+        <!-- Заголовок уточнений -->
+        <TextView
+            android:id="@+id/clarificationsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clarifications"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone" />
+
+        <!-- Контейнер для уточнений (динамический) -->
+        <LinearLayout
+            android:id="@+id/clarificationsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="6dp" />
+
+        <!-- Заголовок ответов -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,7 +155,7 @@
             android:textColor="#000000"
             android:layout_marginBottom="8dp" />
 
-        <!-- Контейнер для динамических ответов -->
+        <!-- Контейнер для ответов (динамический) -->
         <LinearLayout
             android:id="@+id/answersContainer"
             android:layout_width="match_parent"

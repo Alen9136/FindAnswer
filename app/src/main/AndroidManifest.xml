@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- Для старых версий Android -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -43,6 +45,12 @@
             tools:ignore="Instantiatable" />
         <activity android:name=".QuestionDetailActivity" />
         <activity android:name=".EditProfileActivity" />
+        <activity android:name=".QuestionsActivity" />
+        <activity android:name=".AnswerActivity" />
+        <activity android:name=".UserProfileActivity" />
+        <activity android:name=".UserQuestionsActivity" />
+
+
 
 
     </application>

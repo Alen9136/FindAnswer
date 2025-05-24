@@ -1,6 +1,7 @@
 package com.example.findanswer;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,13 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        adapter = new QuestionAdapter(new ArrayList<>());
+        adapter = new QuestionAdapter(new ArrayList<>(), userId -> {
+            Intent intent = new Intent(getContext(), UserProfileActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+        });
+        recyclerView.setAdapter(adapter);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 

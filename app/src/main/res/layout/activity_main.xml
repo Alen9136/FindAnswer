@@ -11,8 +11,8 @@
     <!-- Логотип -->
     <ImageView
         android:id="@+id/logoImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:src="@drawable/fasw"
         android:layout_marginBottom="20dp"/>
 
@@ -56,4 +56,14 @@
         android:text="Sign in"
         android:backgroundTint="@color/dark_gray"
         android:textColor="@android:color/white"/>
+    <!-- Кнопка "Login as Test User" -->
+    <Button
+        android:id="@+id/btnTestLogin"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Login as Test User"
+        android:backgroundTint="@android:color/holo_green_dark"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="20dp"/>
+
 </LinearLayout>

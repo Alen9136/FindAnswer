@@ -17,9 +17,10 @@
             android:layout_gravity="start"
             android:layout_marginTop="35dp"
             android:layout_marginBottom="-50dp"
-            android:contentDescription="@string/todo"
             android:src="@drawable/nav_return"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            android:background="@null" />
+
 
         <TextView
             android:id="@+id/qa_title"

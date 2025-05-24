@@ -28,8 +28,10 @@ public class DiscoverFragment extends Fragment {
         searchEditText = view.findViewById(R.id.searchEditText);
         ImageButton searchButton = view.findViewById(R.id.searchButton);
         RecyclerView recyclerView = view.findViewById(R.id.discoverRecyclerView);
+        adapter = new QuestionAdapter(new ArrayList<>(), userId -> {
+            // Пока ничего не делаем, или логируем
+        });
 
-        adapter = new QuestionAdapter(new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 

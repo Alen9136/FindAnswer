@@ -22,7 +22,6 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
-
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -107,14 +106,19 @@ public class CreateFragment extends Fragment {
     private void setupDatePicker() {
         deadlineEditText.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
+
             DatePickerDialog picker = new DatePickerDialog(requireContext(), (view1, year, month, dayOfMonth) -> {
                 @SuppressLint("DefaultLocale")
                 String date = String.format("%02d/%02d/%d", dayOfMonth, month + 1, year);
                 deadlineEditText.setText(date);
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+            picker.getDatePicker().setMinDate(calendar.getTimeInMillis());
+
             picker.show();
         });
     }
+
 
     private void setupCreateButton() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -156,7 +160,7 @@ public class CreateFragment extends Fragment {
 
             if (!valid) return;
 
-            int coins = Integer.parseInt(coinsStr);
+            int coinsToSpend = Integer.parseInt(coinsStr);
 
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             if (currentUser == null) {
@@ -165,33 +169,64 @@ public class CreateFragment extends Fragment {
             }
 
             String userId = currentUser.getUid();
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+            DatabaseReference userCoinsRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("coins");
 
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            userCoinsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String name = snapshot.child("name").getValue(String.class);
-                    if (name == null || name.isEmpty()) {
-                        Toast.makeText(getContext(), "Пожалуйста, укажите имя в профиле", Toast.LENGTH_LONG).show();
+                    Integer currentCoins = snapshot.getValue(Integer.class);
+                    if (currentCoins == null) {
+                        Toast.makeText(getContext(), "У вас нет коинов на счету", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    String questionId = questionsRef.push().getKey(); // получаем ключ
-                    if(questionId != null){
-                        Question question = new Question(grade, subject, title, description, deadline, coins, formattedDate, name);
-                        question.setFileUrl(uploadedFileUrl);
-                        question.setId(questionId);
-                        questionsRef.push().setValue(question)
-                                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Question uploaded!", Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+
+                    if (currentCoins < coinsToSpend) {
+                        Toast.makeText(getContext(), "Недостаточно коинов для создания вопроса", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
+                    // Списываем коины
+                    userCoinsRef.setValue(currentCoins - coinsToSpend).addOnSuccessListener(aVoid -> {
+                        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+                        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String name = snapshot.child("name").getValue(String.class);
+                                if (name == null || name.isEmpty()) {
+                                    Toast.makeText(getContext(), "Пожалуйста, укажите имя в профиле", Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+
+                                String questionId = questionsRef.push().getKey();
+                                if (questionId != null) {
+                                    Question question = new Question(grade, subject, title, description, deadline, coinsToSpend, formattedDate, name);
+                                    question.setFileUrl(uploadedFileUrl);
+                                    question.setId(questionId);
+                                    question.setUserId(userId);
+
+                                    questionsRef.child(questionId).setValue(question)
+                                            .addOnSuccessListener(aVoid1 ->
+                                                    Toast.makeText(getContext(), "Question uploaded!", Toast.LENGTH_SHORT).show())
+                                            .addOnFailureListener(e ->
+                                                    Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(getContext(), "Ошибка получения имени пользователя", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }).addOnFailureListener(e ->
+                            Toast.makeText(getContext(), "Ошибка списания коинов: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(getContext(), "Failed to load username", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Ошибка чтения коинов: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
+
         });
     }
 
@@ -241,7 +276,6 @@ public class CreateFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == 200) {
             boolean granted = true;
             for (int result : grantResults) {
@@ -250,7 +284,6 @@ public class CreateFragment extends Fragment {
                     break;
                 }
             }
-
             if (granted) {
                 openFilePicker();
             } else {
@@ -262,7 +295,6 @@ public class CreateFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedFileUri = data.getData();
             if (selectedFileUri != null) {

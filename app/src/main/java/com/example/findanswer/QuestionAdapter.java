@@ -7,20 +7,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.QuestionViewHolder> {
-    private List<Question> displayedQuestions; // Текущие отображаемые вопросы
-    private List<Question> allQuestions;      // Полный список вопросов
 
-    public QuestionAdapter(List<Question> questions) {
+    public interface OnUserProfileClickListener {
+        void onUserProfileClick(String userId);
+    }
+
+    private List<Question> displayedQuestions;
+    private List<Question> allQuestions;
+    private final OnUserProfileClickListener userProfileClickListener;
+
+    public QuestionAdapter(List<Question> questions, OnUserProfileClickListener listener) {
         this.allQuestions = new ArrayList<>(questions);
         this.displayedQuestions = new ArrayList<>(questions);
+        this.userProfileClickListener = listener;
     }
 
     @NonNull
@@ -39,6 +54,51 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         holder.descriptionTextView.setText(q.description);
         holder.subjectTextView.setText(q.subject + " • " + q.grade + " • " + q.coins + " Coins");
 
+        // Загрузка аватарки
+        if (q.getUserId() != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users")
+                    .child(q.getUserId()).child("avatar");
+
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String avatarUrl = snapshot.getValue(String.class);
+                    if (avatarUrl != null && !avatarUrl.isEmpty()) {
+                        Glide.with(holder.profileImageView.getContext())
+                                .load(avatarUrl)
+                                .placeholder(R.drawable.nav_profile)
+                                .circleCrop()
+                                .into(holder.profileImageView);
+
+                    } else {
+                        holder.profileImageView.setImageResource(R.drawable.nav_profile);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    holder.profileImageView.setImageResource(R.drawable.nav_profile);
+                }
+            });
+        } else {
+            holder.profileImageView.setImageResource(R.drawable.nav_profile);
+        }
+
+        // Клик по аватарке
+        holder.profileImageView.setOnClickListener(v -> {
+            if (userProfileClickListener != null && q.getUserId() != null) {
+                userProfileClickListener.onUserProfileClick(q.getUserId());
+            }
+        });
+
+        // Клик по названию
+        holder.titleTextView.setOnClickListener(v -> {
+            if (userProfileClickListener != null && q.getUserId() != null) {
+                userProfileClickListener.onUserProfileClick(q.getUserId());
+            }
+        });
+
+        // Переход к деталям
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), QuestionDetailActivity.class);
             intent.putExtra("title", q.title);
@@ -49,10 +109,11 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             intent.putExtra("coins", q.coins);
             intent.putExtra("fileUrl", q.getFileUrl());
             intent.putExtra("id", q.getId());
-            intent.putExtra("name", q.name); // ⚡ Добавляем username
+            intent.putExtra("name", q.name);
             v.getContext().startActivity(intent);
         });
 
+        // Кнопка "Ответить"
         holder.answerButton.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), QuestionAnswerActivity.class);
             intent.putExtra("title", q.title);
@@ -63,7 +124,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             intent.putExtra("coins", q.coins);
             intent.putExtra("fileUrl", q.getFileUrl());
             intent.putExtra("id", q.getId());
-            intent.putExtra("name", q.name); // ⚡ Добавляем username
+            intent.putExtra("name", q.name);
             v.getContext().startActivity(intent);
         });
     }
@@ -73,7 +134,6 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         return displayedQuestions.size();
     }
 
-    // Основной метод фильтрации
     @SuppressLint("NotifyDataSetChanged")
     public void filter(String query) {
         displayedQuestions.clear();
@@ -97,7 +157,6 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
                 (question.subject != null && question.subject.toLowerCase().contains(query));
     }
 
-    // Обновление полного списка вопросов
     @SuppressLint("NotifyDataSetChanged")
     public void updateAllQuestions(List<Question> newQuestions) {
         allQuestions = new ArrayList<>(newQuestions);
@@ -108,6 +167,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
     public static class QuestionViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView, descriptionTextView, subjectTextView;
         Button answerButton;
+        ImageView profileImageView;
 
         public QuestionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -115,7 +175,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
             subjectTextView = itemView.findViewById(R.id.subjectTextView);
             answerButton = itemView.findViewById(R.id.answerButton);
+            profileImageView = itemView.findViewById(R.id.userAvatar);
         }
     }
-
 }

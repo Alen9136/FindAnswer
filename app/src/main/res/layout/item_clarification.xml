@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="@drawable/card_background"
+    android:gravity="center_vertical"
+    android:layout_marginBottom="15dp"> <!-- Добавлено -->
+
+    <ImageView
+        android:id="@+id/clarificationUserPhoto"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/nav_profile"
+        android:contentDescription="User photo"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="12dp"
+        />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/clarificationUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/clarificationMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Message text"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:layout_marginTop="2dp"
+            />
+
+    </LinearLayout>
+</LinearLayout>

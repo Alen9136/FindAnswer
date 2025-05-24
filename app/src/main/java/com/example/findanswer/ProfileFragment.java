@@ -1,11 +1,11 @@
 package com.example.findanswer;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,9 +22,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 public class ProfileFragment extends Fragment {
 
     private TextView answersCountTextView, likesCountTextView, profileUsername;
+    private ImageView profileAvatar;
+    private TextView coinsCountTextView;
+
 
     @Nullable
     @Override
@@ -35,16 +41,34 @@ public class ProfileFragment extends Fragment {
 
         answersCountTextView = view.findViewById(R.id.answersCount);
         likesCountTextView = view.findViewById(R.id.likesCount);
+
         profileUsername = view.findViewById(R.id.profileUsername);
-        Button editProfileButton = view.findViewById(R.id.editProfileButton);
-        editProfileButton.setOnClickListener(v -> {
+        profileAvatar = view.findViewById(R.id.profileAvatar);
+        coinsCountTextView = view.findViewById(R.id.coinsCount);
+
+
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView editProfileText = view.findViewById(R.id.editText);
+        editProfileText.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), EditProfileActivity.class);
             startActivity(intent);
         });
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView questionText = view.findViewById(R.id.questionText);
+        questionText.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), QuestionsActivity.class);
+            startActivity(intent);
+        });
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView answerTexts = view.findViewById(R.id.answersText);
+        answerTexts.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AnswerActivity.class);
+            startActivity(intent);
+        });
+
         loadUserStats();
+        loadAvatar();
 
         return view;
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -60,64 +84,69 @@ public class ProfileFragment extends Fragment {
         DatabaseReference avatarRef = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child(userId)
-                .child("avatarUrl");
+                .child("avatar");
 
         avatarRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String avatarUrl = snapshot.getValue(String.class);
                 if (avatarUrl != null && isAdded()) {
-                    ImageView profileAvatar = requireView().findViewById(R.id.profileAvatar);
                     Glide.with(requireContext())
                             .load(avatarUrl)
                             .placeholder(R.drawable.nav_profile)
+                            .error(R.drawable.nav_profile)
                             .circleCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE) // Отключаем кэш
+                            .skipMemoryCache(true)
                             .into(profileAvatar);
+                } else {
+                    profileAvatar.setImageResource(R.drawable.nav_profile); // дефолтный аватар
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                // Ошибка загрузки аватара — можно обработать
             }
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void loadUserStats() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            // Пользователь не залогинен — можно скрыть статистику или показать дефолт
             answersCountTextView.setText("0");
             likesCountTextView.setText("0");
+            coinsCountTextView.setText("Coins: 0");
+            profileUsername.setText("Guest");
             return;
         }
 
         String currentUserId = currentUser.getUid();
 
+        DatabaseReference userRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(currentUserId);
 
-        {
-            String userId = currentUser.getUid();
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String name = snapshot.child("name").getValue(String.class);
+                Long coinsLong = snapshot.child("coins").getValue(Long.class);
 
-            DatabaseReference userRef = FirebaseDatabase.getInstance()
-                    .getReference("users")
-                    .child(userId)
-                    .child("name");
+                profileUsername.setText(name != null ? name : "User");
 
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String name = snapshot.getValue(String.class);
-                    if (name != null) {
-                        // например, установить имя в TextView
-                        profileUsername.setText(name);
-                    }
-                }
+                int coins = coinsLong != null ? coinsLong.intValue() : 0;
+                coinsCountTextView.setText("Coins: " + coins);
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    // обработка ошибки
-                }
-            });
-        }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Логирование при необходимости
+            }
+        });
 
         DatabaseReference answersRef = FirebaseDatabase.getInstance().getReference("answers");
 
@@ -127,7 +156,6 @@ public class ProfileFragment extends Fragment {
                 int totalAnswers = 0;
                 int totalLikes = 0;
 
-                // Перебираем все вопросы и их ответы
                 for (DataSnapshot questionSnapshot : snapshot.getChildren()) {
                     for (DataSnapshot answerSnapshot : questionSnapshot.getChildren()) {
                         String userId = answerSnapshot.child("userId").getValue(String.class);
@@ -141,15 +169,15 @@ public class ProfileFragment extends Fragment {
                     }
                 }
 
-                // Обновляем UI
                 answersCountTextView.setText(String.valueOf(totalAnswers));
                 likesCountTextView.setText(String.valueOf(totalLikes));
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Можно обработать ошибку, например, показать тост
+                // Логирование при необходимости
             }
         });
     }
+
 }

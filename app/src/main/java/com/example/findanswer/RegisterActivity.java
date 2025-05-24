@@ -14,12 +14,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText inputName, inputEmail, inputPassword, checkPassword;
-
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
@@ -41,8 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(v -> registerUser());
 
         loginLink.setOnClickListener(v -> {
-            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
     }
 
@@ -75,17 +75,26 @@ public class RegisterActivity extends AppCompatActivity {
                         if (user != null) {
                             String userId = user.getUid();
 
-                            mDatabase.child("users").child(userId).setValue(new User(name, email));
-                        }
+                            // Создаем запись пользователя в базе, включая coins = 50
+                            Map<String, Object> userData = new HashMap<>();
+                            userData.put("name", name);
+                            userData.put("email", email);
+                            userData.put("coins", 50);
 
-                        Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
-                        finish();
+                            mDatabase.child("users").child(userId).setValue(userData)
+                                    .addOnCompleteListener(dbTask -> {
+                                        if (dbTask.isSuccessful()) {
+                                            Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                                            finish();
+                                        } else {
+                                            Toast.makeText(this, "Failed to save user data: " + dbTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                        }
                     } else {
                         Toast.makeText(this, "Registration failed: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
-
-
 }
