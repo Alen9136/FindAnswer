@@ -296,7 +296,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     LayoutInflater inflater = LayoutInflater.from(QuestionDetailActivity.this);
                     View answerView = inflater.inflate(R.layout.item_answer_block, answersContainer, false);
 
-                    TextView answerUsernameTextView = answerView.findViewById(R.id.usernameTextView);
+                    @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView answerUsernameTextView = answerView.findViewById(R.id.usernameTextView);
                     @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView answerTextView = answerView.findViewById(R.id.answerText);
                     TextView thankCountTextView = answerView.findViewById(R.id.thankCountText);
                     ImageView heartIcon = answerView.findViewById(R.id.heartIcon);
