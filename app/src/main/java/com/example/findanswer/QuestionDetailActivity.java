@@ -221,21 +221,39 @@ public class QuestionDetailActivity extends AppCompatActivity {
                 if (titleTextView != null) titleTextView.setText(question.title);
                 if (descriptionTextView != null) descriptionTextView.setText(question.description);
                 if (subjectTextView != null) subjectTextView.setText(question.subject + " • " + question.grade);
-                if (usernameTextView != null) usernameTextView.setText(question.getName());
-                if (answerButton != null) answerButton.setText("+ ANSWER THE QUESTION " + question.coins/2 + " C");
+                if (answerButton != null) answerButton.setText("+ ANSWER THE QUESTION " + question.coins / 2 + " C");
 
                 authorUserId = question.getUserId();
 
-                if (usernameTextView != null) {
-                    usernameTextView.setOnClickListener(v -> {
-                        if (authorUserId != null && !authorUserId.isEmpty()) {
-                            Intent intent = new Intent(QuestionDetailActivity.this, UserProfileActivity.class);
-                            intent.putExtra("userId", authorUserId);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(QuestionDetailActivity.this, "User ID не доступен", Toast.LENGTH_SHORT).show();
+                // Загружаем имя автора отдельно из users
+                if (authorUserId != null && !authorUserId.isEmpty()) {
+                    DatabaseReference userRef = FirebaseDatabase.getInstance()
+                            .getReference("users")
+                            .child(authorUserId);
+                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                            String name = userSnapshot.child("name").getValue(String.class);
+                            if (name != null && !name.isEmpty()) {
+                                usernameTextView.setText(name);
+                            } else {
+                                usernameTextView.setText("Unknown");
+                            }
+
+                            usernameTextView.setOnClickListener(v -> {
+                                Intent intent = new Intent(QuestionDetailActivity.this, UserProfileActivity.class);
+                                intent.putExtra("userId", authorUserId);
+                                startActivity(intent);
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            usernameTextView.setText("Unknown");
                         }
                     });
+                } else {
+                    usernameTextView.setText("Unknown");
                 }
 
                 if (answerButton != null) {
@@ -262,6 +280,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void loadAnswers() {
         if (questionId == null || answersContainer == null) return;
@@ -296,7 +315,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     LayoutInflater inflater = LayoutInflater.from(QuestionDetailActivity.this);
                     View answerView = inflater.inflate(R.layout.item_answer_block, answersContainer, false);
 
-                    @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView answerUsernameTextView = answerView.findViewById(R.id.usernameTextView);
+                    @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView answerUsernameTextView = answerView.findViewById(R.id.userTextView);
                     @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView answerTextView = answerView.findViewById(R.id.answerText);
                     TextView thankCountTextView = answerView.findViewById(R.id.thankCountText);
                     ImageView heartIcon = answerView.findViewById(R.id.heartIcon);
@@ -338,7 +357,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
                                             @Override
                                             public void onComplete(DatabaseError error, boolean committed, DataSnapshot currentData) {
-                                                if (committed && heartIcon != null) {
+                                                if (committed) {
                                                     likeRef.child("likedBy").child(currentUserId).setValue(true);
                                                     heartIcon.setImageResource(R.drawable.ic_heart_filled_red);
                                                 }

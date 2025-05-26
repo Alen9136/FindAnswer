@@ -1,17 +1,13 @@
 package com.example.findanswer;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.Button;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +16,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +32,6 @@ public class HomeFragment extends Fragment {
             intent.putExtra("userId", userId);
             startActivity(intent);
         });
-        recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
@@ -45,16 +39,19 @@ public class HomeFragment extends Fragment {
         Button askQuestionButton = view.findViewById(R.id.ask_question_button);
         askQuestionButton.setOnClickListener(v -> {
             CreateFragment createFragment = new CreateFragment();
-
-            // Запускаем замену фрагмента через FragmentManager
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, createFragment)  // fragment_container - контейнер для фрагментов в активности
-                    .addToBackStack(null)  // чтобы можно было вернуться назад
+                    .replace(R.id.fragment_container, createFragment)
+                    .addToBackStack(null)
                     .commit();
-        });
-        loadQuestions();
 
+            // Обновляем выделение в навигации
+            if (getActivity() instanceof HomeActivity) {
+                ((HomeActivity) getActivity()).updateNavigationSelection(R.id.nav_create);
+            }
+        });
+
+        loadQuestions();
         return view;
     }
 
@@ -73,10 +70,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                if (getContext() != null) {
-                    Toast.makeText(getContext(), "Failed to load username", Toast.LENGTH_SHORT).show();
-                }
-
+                Toast.makeText(getContext(), "Failed to load questions", Toast.LENGTH_SHORT).show();
             }
         });
     }

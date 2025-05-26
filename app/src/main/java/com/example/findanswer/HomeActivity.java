@@ -1,60 +1,63 @@
 package com.example.findanswer;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.MenuItem;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
 
-    @SuppressLint({"MissingInflatedId", "SetTextI18n"})
+    private BottomNavigationView bottomNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        if (savedInstanceState == null) {
+        // Проверка на открытие профиля
+        boolean openProfile = getIntent() != null && getIntent().hasExtra("openProfile");
+
+        if (openProfile) {
+            replaceFragment(new ProfileFragment());
+            bottomNavigationView.setSelectedItemId(R.id.nav_profile);
+            getIntent().removeExtra("openProfile");
+        } else if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new HomeFragment())
                     .commit();
+            bottomNavigationView.setSelectedItemId(R.id.nav_home);
         }
 
-        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment selectedFragment = null;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
 
-                int itemId = item.getItemId();
-                if (itemId == R.id.nav_home) {
-                    selectedFragment = new HomeFragment();
-                }else if(itemId == R.id.nav_search){
-                    selectedFragment = new DiscoverFragment();
-                }else if(itemId == R.id.nav_create){
-                    selectedFragment = new CreateFragment();
-                }else if(itemId == R.id.nav_profile){
-                    selectedFragment = new ProfileFragment();
-                }
-
-                if (selectedFragment != null) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, selectedFragment)
-                            .commit();
-                }
-
+            if (itemId == R.id.nav_home) {
+                replaceFragment(new HomeFragment());
+                return true;
+            } else if (itemId == R.id.nav_search) {
+                replaceFragment(new DiscoverFragment());
+                return true;
+            } else if (itemId == R.id.nav_create) {
+                replaceFragment(new CreateFragment());
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                replaceFragment(new ProfileFragment());
                 return true;
             }
+            return false;
         });
+    }
+
+    private void replaceFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new HomeFragment())
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
                 .commit();
     }
+
+    public void updateNavigationSelection(int menuItemId) {
+        bottomNavigationView.setSelectedItemId(menuItemId);
+    }
 }
-
-
-
-
